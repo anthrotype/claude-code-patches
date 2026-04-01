@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Thinking Visibility Patcher v2.1.86');
+  console.log('Claude Code Thinking Visibility Patcher v2.1.89');
   console.log('==============================================\n');
   console.log('Usage: node patch-thinking.js [options]\n');
   console.log('Options:');
@@ -27,7 +27,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Thinking Visibility Patcher v2.1.86');
+console.log('Claude Code Thinking Visibility Patcher v2.1.89');
 console.log('==============================================\n');
 
 // Helper function to safely execute shell commands
@@ -176,25 +176,25 @@ if (!fs.existsSync(targetPath)) {
 
 let content = fs.readFileSync(targetPath, 'utf8');
 
-// Thinking Visibility Patch (v2.1.86)
+// Thinking Visibility Patch (v2.1.89)
 // Forces thinking content to always be visible in the CLI output.
 //
 // Two-layer gating (since v2.1.31+ memo cache structure):
 // The case"thinking" handler has TWO independent layers that both suppress
 // thinking output. The replacement must fix BOTH or thinking stays invisible:
 //
-//   Layer 1 — Early return guard: if(!M&&!O)return null
-//     Returns null when not in transcript mode (M=false) AND not verbose (O=false).
+//   Layer 1 — Early return guard: if(!X&&!O)return null
+//     Returns null when not in transcript mode (X=false) AND not verbose (O=false).
 //     Fix: Change to if(0)return null — makes it dead code.
 //
-//   Layer 2 — Component prop: isTranscriptMode:M
+//   Layer 2 — Component prop: isTranscriptMode:X
 //     Controls whether the thinking component shows content or is collapsed.
 //     Fix: Change to isTranscriptMode:!0
 //
-//   Layer 3 — hideInTranscript: T = M && !(!Z||W===Z)
-//     In transcript mode (M=true), hides all thinking blocks except the last.
-//     The MI8 component does `if(hideInTranscript) return null`.
-//     Fix: Change to T=!1 (always false) — never hide thinking.
+//   Layer 3 — hideInTranscript: k = X && !(!f||D===f)
+//     In transcript mode (X=true), hides all thinking blocks except the last.
+//     The Wx8 component does `if(hideInTranscript) return null`.
+//     Fix: Change to k=!1 (always false) — never hide thinking.
 //
 // Note: Banner function (ZT2/vo4 etc.) was deprecated in v2.0.71.
 //
@@ -205,14 +205,15 @@ let content = fs.readFileSync(targetPath, 'utf8');
 // v2.1.84: OC8, guard if(!P&&!w), F5.createElement, q[31-36]
 // v2.1.85: Xb8, guard if(!M&&!A), U3.createElement, K[31-36], memo cache var K (not q)
 // v2.1.86: MI8, guard if(!M&&!O), n3.createElement, K[31-36], verbose A→O, hideInTranscript v→T, addMargin z→Y
+// v2.1.89: Wx8, guard if(!X&&!O), w9.createElement, K[34-39], guard M→X, hideInTranscript T→k, addMargin Y→z, hideInTranscript Z→f W→D
 
-const thinkingSearchPattern = 'case"thinking":{if(!M&&!O)return null;let T=M&&!(!Z||W===Z),V;if(K[31]!==Y||K[32]!==M||K[33]!==_||K[34]!==T||K[35]!==O)V=n3.createElement(MI8,{addMargin:Y,param:_,isTranscriptMode:M,verbose:O,hideInTranscript:T}),K[31]=Y,K[32]=M,K[33]=_,K[34]=T,K[35]=O,K[36]=V;else V=K[36];return V}';
+const thinkingSearchPattern = 'case"thinking":{if(!X&&!O)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==O)V=w9.createElement(Wx8,{addMargin:z,param:_,isTranscriptMode:X,verbose:O,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=O,K[39]=V;else V=K[39];return V}';
 
-const thinkingReplacement = 'case"thinking":{if(0)return null;let T=!1,V;if(K[31]!==Y||K[32]!==M||K[33]!==_||K[34]!==T||K[35]!==O)V=n3.createElement(MI8,{addMargin:Y,param:_,isTranscriptMode:!0,verbose:O,hideInTranscript:T}),K[31]=Y,K[32]=M,K[33]=_,K[34]=T,K[35]=O,K[36]=V;else V=K[36];return V}';
+const thinkingReplacement = 'case"thinking":{if(0)return null;let k=!1,V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==O)V=w9.createElement(Wx8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:O,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=O,K[39]=V;else V=K[39];return V}';
 
 // Broken-patch pattern: previous patch had guard fixed but hideInTranscript still active.
 // Re-running the patch will fix it.
-const thinkingBrokenPattern = 'case"thinking":{if(0)return null;let T=M&&!(!Z||W===Z),V;if(K[31]!==Y||K[32]!==M||K[33]!==_||K[34]!==T||K[35]!==O)V=n3.createElement(MI8,{addMargin:Y,param:_,isTranscriptMode:!0,verbose:O,hideInTranscript:T}),K[31]=Y,K[32]=M,K[33]=_,K[34]=T,K[35]=O,K[36]=V;else V=K[36];return V}';
+const thinkingBrokenPattern = 'case"thinking":{if(0)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==O)V=w9.createElement(Wx8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:O,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=O,K[39]=V;else V=K[39];return V}';
 
 let patchApplied = false;
 let patchBrokenFixed = false;
