@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.89');
+  console.log('Claude Code Tool Visibility Patcher v2.1.90');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.89');
+console.log('Claude Code Tool Visibility Patcher v2.1.90');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -208,36 +208,38 @@ let content = fs.readFileSync(targetPath, 'utf8');
 //   renderer, g=useEffect dep, Y=verbose var, X6=array var
 // v2.1.89: nKK -> OQz, 4-site: nKK verbose check if(z), OQz inner
 //   renderer, z=verbose var, P6=array var
+// v2.1.90: nKK -> Tdz, 4-site: verbose check if(z), Tdz inner
+//   renderer, z=verbose var, H6=array var, J6=key var
 
-// Patch 1: Force nKK verbose branch (always show individual tool calls)
+// Patch 1: Force main component verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
-// The z variable retains its original value for passthrough to OQz.
-const patch1Search = '$Qz);if(z){let P6=[]';
-const patch1Replace = '$Qz);if(!0){let P6=[]';
+// The z variable retains its original value for passthrough to Tdz.
+const patch1Search = 'vdz);if(z){let H6=[]';
+const patch1Replace = 'vdz);if(!0){let H6=[]';
 
-// Patch 2: Pass verbose prop through nKK -> OQz
-// Adds verbose:z to the OQz createElement call so OQz receives the original
+// Patch 2: Pass verbose prop through main component -> Tdz
+// Adds verbose:z to the Tdz createElement call so Tdz receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(OQz,{key:w6.id,content:w6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(OQz,{key:w6.id,content:w6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(Tdz,{key:J6.id,content:J6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(Tdz,{key:J6.id,content:J6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
-// Patch 3: Accept verbose prop in OQz component
+// Patch 3: Accept verbose prop in Tdz component
 // Adds verbose:VB to the destructuring so it's available in the function body.
 const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A}=q';
 const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A,verbose:VB}=q';
 
-// Patch 4: Use verbose prop in OQz renderToolResultMessage
+// Patch 4: Use verbose prop in Tdz renderToolResultMessage
 // Changes hardcoded verbose:!0 to VB??!0 so results are condensed when
 // VB is false (normal mode) but fully expanded when VB is true (transcript).
 const patch4Search = 'renderToolResultMessage?.(k,[],{verbose:!0,tools:z,theme:A})';
 const patch4Replace = 'renderToolResultMessage?.(k,[],{verbose:VB??!0,tools:z,theme:A})';
 
 const patches = [
-  { name: 'Force nKK verbose branch', search: patch1Search, replace: patch1Replace },
-  { name: 'Pass verbose to OQz', search: patch2Search, replace: patch2Replace },
-  { name: 'Accept verbose in OQz', search: patch3Search, replace: patch3Replace },
-  { name: 'Use verbose in OQz results', search: patch4Search, replace: patch4Replace },
+  { name: 'Force verbose branch', search: patch1Search, replace: patch1Replace },
+  { name: 'Pass verbose to Tdz', search: patch2Search, replace: patch2Replace },
+  { name: 'Accept verbose in Tdz', search: patch3Search, replace: patch3Replace },
+  { name: 'Use verbose in Tdz results', search: patch4Search, replace: patch4Replace },
 ];
 
 // Check which patches can be applied
