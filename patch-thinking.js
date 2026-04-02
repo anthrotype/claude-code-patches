@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Thinking Visibility Patcher v2.1.89');
+  console.log('Claude Code Thinking Visibility Patcher v2.1.90');
   console.log('==============================================\n');
   console.log('Usage: node patch-thinking.js [options]\n');
   console.log('Options:');
@@ -27,7 +27,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Thinking Visibility Patcher v2.1.89');
+console.log('Claude Code Thinking Visibility Patcher v2.1.90');
 console.log('==============================================\n');
 
 // Helper function to safely execute shell commands
@@ -206,6 +206,7 @@ let content = fs.readFileSync(targetPath, 'utf8');
 // v2.1.85: Xb8, guard if(!M&&!A), U3.createElement, K[31-36], memo cache var K (not q)
 // v2.1.86: MI8, guard if(!M&&!O), n3.createElement, K[31-36], verbose A→O, hideInTranscript v→T, addMargin z→Y
 // v2.1.89: Wx8, guard if(!X&&!O), w9.createElement, K[34-39], guard M→X, hideInTranscript T→k, addMargin Y→z, hideInTranscript Z→f W→D
+// v2.1.90: same patterns as v2.1.89
 
 const thinkingSearchPattern = 'case"thinking":{if(!X&&!O)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==O)V=w9.createElement(Wx8,{addMargin:z,param:_,isTranscriptMode:X,verbose:O,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=O,K[39]=V;else V=K[39];return V}';
 

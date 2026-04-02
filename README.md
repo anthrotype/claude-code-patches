@@ -22,7 +22,7 @@ Claude Code collapses thinking blocks by default, showing only:
 
 You have to press `ctrl+o` every time to see the actual thinking content. This patch makes thinking blocks visible inline automatically.
 
-**Current Version:** Claude Code 2.1.86 (Updated 2026-03-28)
+**Current Version:** Claude Code 2.1.90 (Updated 2026-04-02)
 
 ## Required Setting (v2.1.64+)
 
