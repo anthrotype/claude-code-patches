@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.90');
+  console.log('Claude Code Tool Visibility Patcher v2.1.91');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.90');
+console.log('Claude Code Tool Visibility Patcher v2.1.91');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -210,26 +210,28 @@ let content = fs.readFileSync(targetPath, 'utf8');
 //   renderer, z=verbose var, P6=array var
 // v2.1.90: nKK -> Tdz, 4-site: verbose check if(z), Tdz inner
 //   renderer, z=verbose var, H6=array var, J6=key var
+// v2.1.91: -> dcz, 4-site: verbose check if(z), dcz inner
+//   renderer, z=verbose var, J6=array var, H6=key var
 
 // Patch 1: Force main component verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
-// The z variable retains its original value for passthrough to Tdz.
-const patch1Search = 'vdz);if(z){let H6=[]';
-const patch1Replace = 'vdz);if(!0){let H6=[]';
+// The z variable retains its original value for passthrough to dcz.
+const patch1Search = 'Qcz);if(z){let J6=[]';
+const patch1Replace = 'Qcz);if(!0){let J6=[]';
 
-// Patch 2: Pass verbose prop through main component -> Tdz
-// Adds verbose:z to the Tdz createElement call so Tdz receives the original
+// Patch 2: Pass verbose prop through main component -> dcz
+// Adds verbose:z to the dcz createElement call so dcz receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(Tdz,{key:J6.id,content:J6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(Tdz,{key:J6.id,content:J6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(dcz,{key:H6.id,content:H6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(dcz,{key:H6.id,content:H6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
-// Patch 3: Accept verbose prop in Tdz component
+// Patch 3: Accept verbose prop in dcz component
 // Adds verbose:VB to the destructuring so it's available in the function body.
 const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A}=q';
 const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A,verbose:VB}=q';
 
-// Patch 4: Use verbose prop in Tdz renderToolResultMessage
+// Patch 4: Use verbose prop in dcz renderToolResultMessage
 // Changes hardcoded verbose:!0 to VB??!0 so results are condensed when
 // VB is false (normal mode) but fully expanded when VB is true (transcript).
 const patch4Search = 'renderToolResultMessage?.(k,[],{verbose:!0,tools:z,theme:A})';
@@ -237,9 +239,9 @@ const patch4Replace = 'renderToolResultMessage?.(k,[],{verbose:VB??!0,tools:z,th
 
 const patches = [
   { name: 'Force verbose branch', search: patch1Search, replace: patch1Replace },
-  { name: 'Pass verbose to Tdz', search: patch2Search, replace: patch2Replace },
-  { name: 'Accept verbose in Tdz', search: patch3Search, replace: patch3Replace },
-  { name: 'Use verbose in Tdz results', search: patch4Search, replace: patch4Replace },
+  { name: 'Pass verbose to dcz', search: patch2Search, replace: patch2Replace },
+  { name: 'Accept verbose in dcz', search: patch3Search, replace: patch3Replace },
+  { name: 'Use verbose in dcz results', search: patch4Search, replace: patch4Replace },
 ];
 
 // Check which patches can be applied
