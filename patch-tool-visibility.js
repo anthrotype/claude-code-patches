@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.91');
+  console.log('Claude Code Tool Visibility Patcher v2.1.92');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.91');
+console.log('Claude Code Tool Visibility Patcher v2.1.92');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -212,36 +212,38 @@ let content = fs.readFileSync(targetPath, 'utf8');
 //   renderer, z=verbose var, H6=array var, J6=key var
 // v2.1.91: -> dcz, 4-site: verbose check if(z), dcz inner
 //   renderer, z=verbose var, J6=array var, H6=key var
+// v2.1.92: -> Ziz, 4-site: verbose check if(z), Ziz inner
+//   renderer, z=verbose var, O6=array var, P6=key var, context Qcz→fiz
 
 // Patch 1: Force main component verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
-// The z variable retains its original value for passthrough to dcz.
-const patch1Search = 'Qcz);if(z){let J6=[]';
-const patch1Replace = 'Qcz);if(!0){let J6=[]';
+// The z variable retains its original value for passthrough to Ziz.
+const patch1Search = 'fiz);if(z){let O6=[]';
+const patch1Replace = 'fiz);if(!0){let O6=[]';
 
-// Patch 2: Pass verbose prop through main component -> dcz
-// Adds verbose:z to the dcz createElement call so dcz receives the original
+// Patch 2: Pass verbose prop through main component -> Ziz
+// Adds verbose:z to the Ziz createElement call so Ziz receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(dcz,{key:H6.id,content:H6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(dcz,{key:H6.id,content:H6,tools:Y,lookups:$,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(Ziz,{key:P6.id,content:P6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(Ziz,{key:P6.id,content:P6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
-// Patch 3: Accept verbose prop in dcz component
+// Patch 3: Accept verbose prop in Ziz component
 // Adds verbose:VB to the destructuring so it's available in the function body.
-const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A}=q';
-const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:$,shouldAnimate:O,theme:A,verbose:VB}=q';
+const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:O,shouldAnimate:A,theme:$}=q';
+const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:O,shouldAnimate:A,theme:$,verbose:VB}=q';
 
-// Patch 4: Use verbose prop in dcz renderToolResultMessage
+// Patch 4: Use verbose prop in Ziz renderToolResultMessage
 // Changes hardcoded verbose:!0 to VB??!0 so results are condensed when
 // VB is false (normal mode) but fully expanded when VB is true (transcript).
-const patch4Search = 'renderToolResultMessage?.(k,[],{verbose:!0,tools:z,theme:A})';
-const patch4Replace = 'renderToolResultMessage?.(k,[],{verbose:VB??!0,tools:z,theme:A})';
+const patch4Search = 'renderToolResultMessage?.(k,[],{verbose:!0,tools:z,theme:$})';
+const patch4Replace = 'renderToolResultMessage?.(k,[],{verbose:VB??!0,tools:z,theme:$})';
 
 const patches = [
   { name: 'Force verbose branch', search: patch1Search, replace: patch1Replace },
-  { name: 'Pass verbose to dcz', search: patch2Search, replace: patch2Replace },
-  { name: 'Accept verbose in dcz', search: patch3Search, replace: patch3Replace },
-  { name: 'Use verbose in dcz results', search: patch4Search, replace: patch4Replace },
+  { name: 'Pass verbose to Ziz', search: patch2Search, replace: patch2Replace },
+  { name: 'Accept verbose in Ziz', search: patch3Search, replace: patch3Replace },
+  { name: 'Use verbose in Ziz results', search: patch4Search, replace: patch4Replace },
 ];
 
 // Check which patches can be applied
