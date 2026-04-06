@@ -22,7 +22,7 @@ Claude Code collapses thinking blocks by default, showing only:
 
 You have to press `ctrl+o` every time to see the actual thinking content. This patch makes thinking blocks visible inline automatically.
 
-**Current Version:** Claude Code 2.1.90 (Updated 2026-04-02)
+**Current Version:** Claude Code 2.1.92 (Updated 2026-04-06)
 
 ## Required Setting (v2.1.64+)
 
@@ -187,11 +187,17 @@ case"thinking":
 - v2.1.80: `rE8` component, `S3` namespace, guard `if(!X&&!w)`, two-layer gating
 - v2.1.81: Same patterns as v2.1.80
 - v2.1.84: `uL8` component, `C5` namespace, guard `if(!P&&!w)`, memo `q[31-36]`
+- v2.1.85: `Xb8` component, `U3` namespace, guard `if(!M&&!A)`, memo `K[31-36]`
+- v2.1.86: `MI8` component, `n3` namespace, guard `if(!M&&!O)`, memo `K[31-36]`
+- v2.1.89: `Wx8` component, `w9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
+- v2.1.90: `AI8` component, `H9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
+- v2.1.91: `QI8` component, `j9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
+- v2.1.92: `Su8` component, `P9` namespace, guard `if(!X&&!A)`, memo `K[34-39]`
 
 ## Installation
 
 ### Prerequisites
-- Claude Code v2.1.84 installed
+- Claude Code v2.1.92 installed
 - Node.js (comes with Claude Code installation)
 
 ### Install Steps
@@ -299,10 +305,10 @@ Then restart Claude Code.
 
 ## Verification
 
-Check if patch is applied (for v2.1.84):
+Check if patch is applied (for v2.1.92):
 
 ```bash
-# Check thinking visibility patch (should show if(0) instead of if(!P&&!w))
+# Check thinking visibility patch (should show if(0) instead of if(!X&&!A))
 grep -o 'case"thinking":{if(0)' $(npm root -g)/@anthropic-ai/claude-code/cli.js
 
 # Should output: case"thinking":{if(0)
