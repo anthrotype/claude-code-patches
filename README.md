@@ -22,7 +22,7 @@ Claude Code collapses thinking blocks by default, showing only:
 
 You have to press `ctrl+o` every time to see the actual thinking content. This patch makes thinking blocks visible inline automatically.
 
-**Current Version:** Claude Code 2.1.92 (Updated 2026-04-06)
+**Current Version:** Claude Code 2.1.96 (Updated 2026-04-08)
 
 ## Required Setting (v2.1.64+)
 
@@ -193,11 +193,12 @@ case"thinking":
 - v2.1.90: `AI8` component, `H9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
 - v2.1.91: `QI8` component, `j9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
 - v2.1.92: `Su8` component, `P9` namespace, guard `if(!X&&!A)`, memo `K[34-39]`
+- v2.1.96: `$p8` component, `Z9` namespace, guard `if(!X&&!A)`, memo `K[34-39]`
 
 ## Installation
 
 ### Prerequisites
-- Claude Code v2.1.92 installed
+- Claude Code v2.1.96 installed
 - Node.js (comes with Claude Code installation)
 
 ### Install Steps
@@ -305,7 +306,7 @@ Then restart Claude Code.
 
 ## Verification
 
-Check if patch is applied (for v2.1.92):
+Check if patch is applied (for v2.1.96):
 
 ```bash
 # Check thinking visibility patch (should show if(0) instead of if(!X&&!A))

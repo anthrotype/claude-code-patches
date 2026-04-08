@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Thinking Visibility Patcher v2.1.92');
+  console.log('Claude Code Thinking Visibility Patcher v2.1.96');
   console.log('==============================================\n');
   console.log('Usage: node patch-thinking.js [options]\n');
   console.log('Options:');
@@ -27,7 +27,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Thinking Visibility Patcher v2.1.92');
+console.log('Claude Code Thinking Visibility Patcher v2.1.96');
 console.log('==============================================\n');
 
 // Helper function to safely execute shell commands
@@ -209,14 +209,15 @@ let content = fs.readFileSync(targetPath, 'utf8');
 // v2.1.90: AI8, guard if(!X&&!O), H9.createElement, K[34-39], NS w9→H9, component Wx8→AI8
 // v2.1.91: QI8, guard if(!X&&!O), j9.createElement, K[34-39], NS H9→j9, component AI8→QI8
 // v2.1.92: Su8, guard if(!X&&!A), P9.createElement, K[34-39], verbose O→A, NS j9→P9, component QI8→Su8
+// v2.1.96: $p8, guard if(!X&&!A), Z9.createElement, K[34-39], NS P9→Z9, component Su8→$p8
 
-const thinkingSearchPattern = 'case"thinking":{if(!X&&!A)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=P9.createElement(Su8,{addMargin:z,param:_,isTranscriptMode:X,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
+const thinkingSearchPattern = 'case"thinking":{if(!X&&!A)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=Z9.createElement($p8,{addMargin:z,param:_,isTranscriptMode:X,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
 
-const thinkingReplacement = 'case"thinking":{if(0)return null;let k=!1,V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=P9.createElement(Su8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
+const thinkingReplacement = 'case"thinking":{if(0)return null;let k=!1,V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=Z9.createElement($p8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
 
 // Broken-patch pattern: previous patch had guard fixed but hideInTranscript still active.
 // Re-running the patch will fix it.
-const thinkingBrokenPattern = 'case"thinking":{if(0)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=P9.createElement(Su8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
+const thinkingBrokenPattern = 'case"thinking":{if(0)return null;let k=X&&!(!f||D===f),V;if(K[34]!==z||K[35]!==X||K[36]!==_||K[37]!==k||K[38]!==A)V=Z9.createElement($p8,{addMargin:z,param:_,isTranscriptMode:!0,verbose:A,hideInTranscript:k}),K[34]=z,K[35]=X,K[36]=_,K[37]=k,K[38]=A,K[39]=V;else V=K[39];return V}';
 
 let patchApplied = false;
 let patchBrokenFixed = false;
