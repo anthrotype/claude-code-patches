@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.92');
+  console.log('Claude Code Tool Visibility Patcher v2.1.96');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.92');
+console.log('Claude Code Tool Visibility Patcher v2.1.96');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -214,19 +214,21 @@ let content = fs.readFileSync(targetPath, 'utf8');
 //   renderer, z=verbose var, J6=array var, H6=key var
 // v2.1.92: -> Ziz, 4-site: verbose check if(z), Ziz inner
 //   renderer, z=verbose var, O6=array var, P6=key var, context Qcz→fiz
+// v2.1.96: -> Vsz, 4-site: verbose check if(z), Vsz inner
+//   renderer, z=verbose var, A6=array var, X6=key var, context fiz→ksz
 
 // Patch 1: Force main component verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
-// The z variable retains its original value for passthrough to Ziz.
-const patch1Search = 'fiz);if(z){let O6=[]';
-const patch1Replace = 'fiz);if(!0){let O6=[]';
+// The z variable retains its original value for passthrough to Vsz.
+const patch1Search = 'ksz);if(z){let A6=[]';
+const patch1Replace = 'ksz);if(!0){let A6=[]';
 
-// Patch 2: Pass verbose prop through main component -> Ziz
-// Adds verbose:z to the Ziz createElement call so Ziz receives the original
+// Patch 2: Pass verbose prop through main component -> Vsz
+// Adds verbose:z to the Vsz createElement call so Vsz receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(Ziz,{key:P6.id,content:P6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(Ziz,{key:P6.id,content:P6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(Vsz,{key:X6.id,content:X6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(Vsz,{key:X6.id,content:X6,tools:Y,lookups:O,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
 // Patch 3: Accept verbose prop in Ziz component
 // Adds verbose:VB to the destructuring so it's available in the function body.
