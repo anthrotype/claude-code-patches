@@ -22,7 +22,7 @@ Claude Code collapses thinking blocks by default, showing only:
 
 You have to press `ctrl+o` every time to see the actual thinking content. This patch makes thinking blocks visible inline automatically.
 
-**Current Version:** Claude Code 2.1.97 (Updated 2026-04-09)
+**Current Version:** Claude Code 2.1.100 (Updated 2026-04-10)
 
 ## Required Setting (v2.1.64+)
 
@@ -195,11 +195,12 @@ case"thinking":
 - v2.1.92: `Su8` component, `P9` namespace, guard `if(!X&&!A)`, memo `K[34-39]`
 - v2.1.96: `$p8` component, `Z9` namespace, guard `if(!X&&!A)`, memo `K[34-39]`
 - v2.1.97: `Kg8` component, `H9` namespace, guard `if(!X&&!O)`, memo `K[34-39]`
+- v2.1.100: `YU8` component, `J9` namespace, guard `if(!M&&!O)`, memo `K[34-39]`
 
 ## Installation
 
 ### Prerequisites
-- Claude Code v2.1.97 installed
+- Claude Code v2.1.100 installed
 - Node.js (comes with Claude Code installation)
 
 ### Install Steps
@@ -307,10 +308,10 @@ Then restart Claude Code.
 
 ## Verification
 
-Check if patch is applied (for v2.1.97):
+Check if patch is applied (for v2.1.100):
 
 ```bash
-# Check thinking visibility patch (should show if(0) instead of if(!X&&!O))
+# Check thinking visibility patch (should show if(0) instead of if(!M&&!O))
 grep -o 'case"thinking":{if(0)' $(npm root -g)/@anthropic-ai/claude-code/cli.js
 
 # Should output: case"thinking":{if(0)
@@ -718,8 +719,8 @@ Developed through analysis of Claude Code's compiled JavaScript. Special thanks 
 
 ---
 
-**Last Updated:** 2026-03-26
-**Claude Code Version:** 2.1.84
+**Last Updated:** 2026-04-10
+**Claude Code Version:** 2.1.100
 **Status:** ✅ Working
 
 ### Quick Reference
