@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.100');
+  console.log('Claude Code Tool Visibility Patcher v2.1.101');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.100');
+console.log('Claude Code Tool Visibility Patcher v2.1.101');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -184,18 +184,18 @@ let content = fs.readFileSync(targetPath, 'utf8');
 // summaries like "Searched for 2 patterns, read 1 file (ctrl+o to expand)".
 //
 // 4-site patch strategy (v2.1.89):
-//   Parent passes verbose:z to nKK. nKK checks if(z) to decide
-//   expanded vs collapsed. OQz (inner renderer) hardcodes verbose:!0 in
-//   renderToolResultMessage. The patch forces nKK's verbose branch while
-//   threading the original verbose value to OQz so renderToolResultMessage
+//   Parent passes verbose:z to PPK. PPK checks if(z) to decide
+//   expanded vs collapsed. COY (inner renderer) hardcodes verbose:!0 in
+//   renderToolResultMessage. The patch forces PPK's verbose branch while
+//   threading the original verbose value to COY so renderToolResultMessage
 //   gets false (condensed) in normal mode and true (expanded) in transcript.
 //
-//   1. nKK verbose branch: force if(z) → if(!0) so individual tool calls
+//   1. PPK verbose branch: force if(z) → if(!0) so individual tool calls
 //      always render. z retains its original value for passthrough.
-//   2. nKK → OQz call: pass verbose:z so OQz receives the original verbose
+//   2. PPK → COY call: pass verbose:z so COY receives the original verbose
 //      value (false=normal, true=transcript).
-//   3. OQz destructuring: accept the new verbose prop as VB.
-//   4. OQz renderToolResultMessage: use VB??!0 so results are condensed in
+//   3. COY destructuring: accept the new verbose prop as VB.
+//   4. COY renderToolResultMessage: use VB??!0 so results are condensed in
 //      normal mode (VB=false) but fully expanded in transcript mode (VB=true).
 //
 // Version history for collapsed_read_search renderer:
@@ -219,26 +219,29 @@ let content = fs.readFileSync(targetPath, 'utf8');
 // v2.1.100: -> RzY, 4-site: verbose check if(z), RzY inner
 //   renderer, z=verbose var, z6=array var, l=key var, context j3Y→LzY
 //   Site 2: theme W→D. Site 3: theme $→w. Site 4: msg V→v, theme $→w.
+// v2.1.101: -> COY, 4-site: verbose check if(z), COY inner
+//   renderer, z=verbose var, q6=array var, a=key var, context LzY→hOY
+//   Main component UXK→PPK. Site 2: key l→a. Sites 3+4 unchanged.
 
 // Patch 1: Force main component verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
 // The z variable retains its original value for passthrough to RzY.
-const patch1Search = 'LzY);if(z){let z6=[]';
-const patch1Replace = 'LzY);if(!0){let z6=[]';
+const patch1Search = 'hOY);if(z){let q6=[]';
+const patch1Replace = 'hOY);if(!0){let q6=[]';
 
-// Patch 2: Pass verbose prop through main component -> RzY
-// Adds verbose:z to the RzY createElement call so RzY receives the original
+// Patch 2: Pass verbose prop through main component -> COY
+// Adds verbose:z to the COY createElement call so COY receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(RzY,{key:l.id,content:l,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(RzY,{key:l.id,content:l,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(COY,{key:a.id,content:a,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(COY,{key:a.id,content:a,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
-// Patch 3: Accept verbose prop in RzY component
+// Patch 3: Accept verbose prop in COY component
 // Adds verbose:VB to the destructuring so it's available in the function body.
 const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:A,shouldAnimate:O,theme:w}=q';
 const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:A,shouldAnimate:O,theme:w,verbose:VB}=q';
 
-// Patch 4: Use verbose prop in RzY renderToolResultMessage
+// Patch 4: Use verbose prop in COY renderToolResultMessage
 // Changes hardcoded verbose:!0 to VB??!0 so results are condensed when
 // VB is false (normal mode) but fully expanded when VB is true (transcript).
 const patch4Search = 'renderToolResultMessage?.(v,[],{verbose:!0,tools:z,theme:w})';
@@ -246,9 +249,9 @@ const patch4Replace = 'renderToolResultMessage?.(v,[],{verbose:VB??!0,tools:z,th
 
 const patches = [
   { name: 'Force verbose branch', search: patch1Search, replace: patch1Replace },
-  { name: 'Pass verbose to RzY', search: patch2Search, replace: patch2Replace },
-  { name: 'Accept verbose in RzY', search: patch3Search, replace: patch3Replace },
-  { name: 'Use verbose in RzY results', search: patch4Search, replace: patch4Replace },
+  { name: 'Pass verbose to COY', search: patch2Search, replace: patch2Replace },
+  { name: 'Accept verbose in COY', search: patch3Search, replace: patch3Replace },
+  { name: 'Use verbose in COY results', search: patch4Search, replace: patch4Replace },
 ];
 
 // Check which patches can be applied
