@@ -13,7 +13,7 @@ const showHelp = args.includes('--help') || args.includes('-h');
 
 // Display help
 if (showHelp) {
-  console.log('Claude Code Tool Visibility Patcher v2.1.109');
+  console.log('Claude Code Tool Visibility Patcher v2.1.110');
   console.log('=============================================\n');
   console.log('Usage: node patch-tool-visibility.js [options]\n');
   console.log('Options:');
@@ -30,7 +30,7 @@ if (showHelp) {
   process.exit(0);
 }
 
-console.log('Claude Code Tool Visibility Patcher v2.1.109');
+console.log('Claude Code Tool Visibility Patcher v2.1.110');
 console.log('=============================================\n');
 
 // Helper function to safely execute shell commands
@@ -226,36 +226,39 @@ let content = fs.readFileSync(targetPath, 'utf8');
 //   renderer, z=verbose var, _6=array var, t=key var, context hOY→D7Y
 //   Main component PPK→w$K. Verbose branch moved into w$K.
 //   Site 2: key a→t, inner renderer COY→Z7Y. Site 3: unchanged. Site 4: msg v→k.
+// v2.1.110: -> e7Y, 4-site: verbose check if(z), e7Y inner
+//   renderer, z=verbose var, _6=array var, t=key var, context D7Y→t7Y
+//   Site 2: inner renderer Z7Y→e7Y. Site 3: unchanged. Site 4: msg k→V.
 
 // Patch 1: Force w$K verbose branch (always show individual tool calls)
 // Changes the if-condition from using z (verbose prop) to !0 (always true)
 // so the verbose branch is always entered regardless of mode.
-// The z variable retains its original value for passthrough to Z7Y.
-const patch1Search = 'D7Y);if(z){let _6=[]';
-const patch1Replace = 'D7Y);if(!0){let _6=[]';
+// The z variable retains its original value for passthrough to e7Y.
+const patch1Search = 't7Y);if(z){let _6=[]';
+const patch1Replace = 't7Y);if(!0){let _6=[]';
 
-// Patch 2: Pass verbose prop through w$K -> Z7Y
-// Adds verbose:z to the Z7Y createElement call so Z7Y receives the original
+// Patch 2: Pass verbose prop through w$K -> e7Y
+// Adds verbose:z to the e7Y createElement call so e7Y receives the original
 // verbose value (false in normal mode, true in transcript mode).
-const patch2Search = 'createElement(Z7Y,{key:t.id,content:t,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
-const patch2Replace = 'createElement(Z7Y,{key:t.id,content:t,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
+const patch2Search = 'createElement(e7Y,{key:t.id,content:t,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D})';
+const patch2Replace = 'createElement(e7Y,{key:t.id,content:t,tools:Y,lookups:A,inProgressToolUseIDs:K,shouldAnimate:_,theme:D,verbose:z})';
 
-// Patch 3: Accept verbose prop in Z7Y component
+// Patch 3: Accept verbose prop in e7Y component
 // Adds verbose:VB to the destructuring so it's available in the function body.
 const patch3Search = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:A,shouldAnimate:O,theme:w}=q';
 const patch3Replace = '{content:_,tools:z,lookups:Y,inProgressToolUseIDs:A,shouldAnimate:O,theme:w,verbose:VB}=q';
 
-// Patch 4: Use verbose prop in Z7Y renderToolResultMessage
+// Patch 4: Use verbose prop in e7Y renderToolResultMessage
 // Changes hardcoded verbose:!0 to VB??!0 so results are condensed when
 // VB is false (normal mode) but fully expanded when VB is true (transcript).
-const patch4Search = 'renderToolResultMessage?.(k,[],{verbose:!0,tools:z,theme:w})';
-const patch4Replace = 'renderToolResultMessage?.(k,[],{verbose:VB??!0,tools:z,theme:w})';
+const patch4Search = 'renderToolResultMessage?.(V,[],{verbose:!0,tools:z,theme:w})';
+const patch4Replace = 'renderToolResultMessage?.(V,[],{verbose:VB??!0,tools:z,theme:w})';
 
 const patches = [
   { name: 'Force verbose branch', search: patch1Search, replace: patch1Replace },
-  { name: 'Pass verbose to Z7Y', search: patch2Search, replace: patch2Replace },
-  { name: 'Accept verbose in Z7Y', search: patch3Search, replace: patch3Replace },
-  { name: 'Use verbose in Z7Y results', search: patch4Search, replace: patch4Replace },
+  { name: 'Pass verbose to e7Y', search: patch2Search, replace: patch2Replace },
+  { name: 'Accept verbose in e7Y', search: patch3Search, replace: patch3Replace },
+  { name: 'Use verbose in e7Y results', search: patch4Search, replace: patch4Replace },
 ];
 
 // Check which patches can be applied
