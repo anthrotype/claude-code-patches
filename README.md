@@ -22,7 +22,7 @@ Claude Code collapses thinking blocks by default, showing only:
 
 You have to press `ctrl+o` every time to see the actual thinking content. This patch makes thinking blocks visible inline automatically.
 
-**Current Version:** Claude Code 2.1.109 (Updated 2026-04-15)
+**Current Version:** Claude Code 2.1.110 (Updated 2026-04-16)
 
 ## Required Setting (v2.1.64+)
 
@@ -198,11 +198,12 @@ case"thinking":
 - v2.1.100: `YU8` component, `J9` namespace, guard `if(!M&&!O)`, memo `K[34-39]`
 - v2.1.101: `kg8` component, `J9` namespace, guard `if(!M&&!O)`, memo `K[34-39]`
 - v2.1.109: `oF8` component, `M9` namespace, guard `if(!M&&!O)`, memo `K[34-39]`
+- v2.1.110: `Wg8` component, `f9` namespace, guard `if(!M&&!O)`, memo `K[34-39]`
 
 ## Installation
 
 ### Prerequisites
-- Claude Code v2.1.109 installed
+- Claude Code v2.1.110 installed
 - Node.js (comes with Claude Code installation)
 
 ### Install Steps
@@ -310,7 +311,7 @@ Then restart Claude Code.
 
 ## Verification
 
-Check if patch is applied (for v2.1.109):
+Check if patch is applied (for v2.1.110):
 
 ```bash
 # Check thinking visibility patch (should show if(0) instead of if(!M&&!O))
@@ -421,7 +422,7 @@ The script automatically works with all Node.js version managers:
 
 ### File Structure
 - **cli.js:** ~3,600+ lines, ~9+ MB (heavily minified)
-- **Version:** Claude Code 2.1.109
+- **Version:** Claude Code 2.1.110
 - **Patches:** Non-invasive, minimal changes
 
 ### Installation Detection System
@@ -503,7 +504,7 @@ When Claude Code updates, function names and component identifiers are regenerat
 1. **Breaks on updates:** Must re-run after `claude update`
 2. **Minified code:** Fragile, patterns may change with version updates
 3. **No official config:** This is a workaround until Anthropic adds a native setting
-4. **Version-specific:** Patterns are specific to v2.1.109
+4. **Version-specific:** Patterns are specific to v2.1.110
 
 ## Feature Request
 
@@ -721,8 +722,8 @@ Developed through analysis of Claude Code's compiled JavaScript. Special thanks 
 
 ---
 
-**Last Updated:** 2026-04-15
-**Claude Code Version:** 2.1.109
+**Last Updated:** 2026-04-16
+**Claude Code Version:** 2.1.110
 **Status:** ✅ Working
 
 ### Quick Reference
